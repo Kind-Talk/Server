@@ -35,9 +35,10 @@ public class ChatRoomController {
     return ResponseEntity.ok(chatRoomService.findById(id));
   }
 
-  @PatchMapping
+  @PatchMapping("/{id}")
   public ResponseEntity<ChatRoomResponse> update(
+    @PathVariable Long id,
     @RequestBody UpdateAnnounceRequest request) {
-    return ResponseEntity.ok(chatRoomService.updateAnnounce(request));
+    return ResponseEntity.ok(chatRoomService.updateAnnounce(id, request));
   }
 }

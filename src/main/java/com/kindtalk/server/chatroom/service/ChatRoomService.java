@@ -32,8 +32,8 @@ public class ChatRoomService {
   }
 
   @Transactional
-  public ChatRoomResponse updateAnnounce(UpdateAnnounceRequest request) {
-    ChatRoom chatRoom = chatRoomRepository.findById(request.id())
+  public ChatRoomResponse updateAnnounce(Long id, UpdateAnnounceRequest request) {
+    ChatRoom chatRoom = chatRoomRepository.findById(id)
       .orElseThrow(() -> new DataNotFoundException("해당되는 채팅방이 존재하지 않습니다."));
 
     chatRoom.setAnnounce(request.announce());

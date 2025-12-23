@@ -80,11 +80,11 @@ public class ChatRoomServiceTest {
   void 공지사항_수정_테스트() {
     // given
     ChatRoom mock = chatRoomRepository.save(new ChatRoom("채팅방4", "teacher4"));
-    UpdateAnnounceRequest request = new UpdateAnnounceRequest(mock.getId(), "공지사항");
-    ChatRoomResponse response1 = chatRoomService.findById(request.id());
+    UpdateAnnounceRequest request = new UpdateAnnounceRequest("공지사항");
+    ChatRoomResponse response1 = chatRoomService.findById(mock.getId());
 
     // when
-    chatRoomService.updateAnnounce(request);
+    chatRoomService.updateAnnounce(mock.getId(), request);
     ChatRoomResponse response2 = chatRoomService.findById(mock.getId());
 
     // then
