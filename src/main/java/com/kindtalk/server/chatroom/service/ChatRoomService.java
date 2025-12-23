@@ -24,8 +24,8 @@ public class ChatRoomService {
   }
 
   @Transactional(readOnly = true)
-  public ChatRoomResponse findById(Long Id) {
-    ChatRoom chatRoom = chatRoomRepository.findById(Id)
+  public ChatRoomResponse findById(Long id) {
+    ChatRoom chatRoom = chatRoomRepository.findById(id)
       .orElseThrow(() -> new DataNotFoundException("해당되는 채팅방이 존재하지 않습니다."));
 
     return ChatRoomResponse.of(chatRoom);
