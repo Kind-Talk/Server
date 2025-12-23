@@ -1,4 +1,7 @@
 package com.kindtalk.server.exception;
 
-public record ErrorResponse() {
+import org.springframework.http.HttpStatus;
+
+public record ErrorResponse(HttpStatus status, String message) {
+
 }
