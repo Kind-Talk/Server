@@ -68,9 +68,6 @@ public class ChatRoomServiceTest {
 
   @Test
   void 존재하지_않는_id로_조회시_실패() {
-    // given
-    ChatRoom mock = chatRoomRepository.save(new ChatRoom("채팅방3", "teacher3"));
-
     // when && then
     assertThatExceptionOfType(DataNotFoundException.class)
       .isThrownBy(() ->
