@@ -1,0 +1,4 @@
+package com.kindtalk.server.exception;
+
+public class DataAlreadyExistsException {
+}
