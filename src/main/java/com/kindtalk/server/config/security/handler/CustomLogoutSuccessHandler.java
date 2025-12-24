@@ -25,7 +25,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpStatus.OK.value());
 
-        LogoutResponse res = new LogoutResponse(HttpStatus.OK, "로그아웃되었습니다.");
+        LogoutResponse res = new LogoutResponse("로그아웃되었습니다.");
         response.getWriter().write(objectMapper.writeValueAsString(res));
     }
 }
