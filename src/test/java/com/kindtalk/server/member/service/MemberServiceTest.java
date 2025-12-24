@@ -1,4 +1,4 @@
-package com.kindtalk.server;
+package com.kindtalk.server.member.service;
 
 import com.kindtalk.server.exception.DataAlreadyExistsException;
 import com.kindtalk.server.exception.DataNotFoundException;
@@ -8,7 +8,6 @@ import com.kindtalk.server.member.dto.MemberResponse;
 import com.kindtalk.server.member.dto.MemberUpdateRequest;
 import com.kindtalk.server.member.repository.MemberRepository;
 import com.kindtalk.server.member.role.Role;
-import com.kindtalk.server.member.service.MemberService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
