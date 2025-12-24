@@ -28,7 +28,7 @@ public class MemberService {
         return MemberResponse.of(member);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public MemberResponse memberDetail(Long id) {
         Member member = findById(id);
         return MemberResponse.of(member);
