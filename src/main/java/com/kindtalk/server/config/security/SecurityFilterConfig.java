@@ -30,6 +30,7 @@ public class SecurityFilterConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/member/join", "/api/member/login").permitAll()
                 .requestMatchers("/api/member/me").authenticated()
+                .anyRequest().authenticated()
             )
             .formLogin(login -> login
                 .loginProcessingUrl("/api/member/login")
