@@ -1,6 +1,7 @@
 package com.kindtalk.server.config.security;
 
 import com.kindtalk.server.member.domain.Member;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,13 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class MyUserDetails implements UserDetails {
 
     private final Member member;
-
-    public MyUserDetails(Member member) {
-        this.member = member;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

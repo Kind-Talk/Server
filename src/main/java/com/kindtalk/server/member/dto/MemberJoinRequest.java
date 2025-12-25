@@ -4,7 +4,6 @@ import com.kindtalk.server.member.domain.Member;
 import com.kindtalk.server.member.role.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public record MemberJoinRequest(
     @NotBlank
@@ -22,10 +21,10 @@ public record MemberJoinRequest(
     @NotNull
     Role role) {
 
-    public Member toEntity(PasswordEncoder passwordEncoder) {
+    public Member toEntity(String password) {
         return new Member(
             this.email,
-            passwordEncoder.encode(this.password),
+            password,
             this.userName,
             this.nickName,
             this.role

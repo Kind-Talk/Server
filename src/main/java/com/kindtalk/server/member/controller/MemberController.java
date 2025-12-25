@@ -31,17 +31,13 @@ public class MemberController {
     @GetMapping("/me")
     public ResponseEntity<MemberResponse> memberDetail(
         @AuthenticationPrincipal MyUserDetails member) {
-        return ResponseEntity.ok(
-            memberService.memberDetail(member.getMember().getId())
-        );
+        return ResponseEntity.ok(memberService.memberDetail(member));
     }
 
     @PatchMapping("/me")
     public ResponseEntity<MemberResponse> memberUpdate(
         @AuthenticationPrincipal MyUserDetails member,
         @Valid @RequestBody MemberUpdateRequest updateRequest) {
-        return ResponseEntity.ok(
-            memberService.memberUpdate(member.getMember().getId(), updateRequest)
-        );
+        return ResponseEntity.ok(memberService.memberUpdate(member, updateRequest));
     }
 }
