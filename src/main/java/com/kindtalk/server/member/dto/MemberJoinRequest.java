@@ -6,28 +6,28 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record MemberJoinRequest(
-    @NotBlank
-    String email,
+  @NotBlank
+  String email,
 
-    @NotBlank
-    String password,
+  @NotBlank
+  String password,
 
-    @NotBlank
-    String userName,
+  @NotBlank
+  String userName,
+  
+  @NotBlank
+  String nickName,
 
-    @NotBlank
-    String nickName,
+  @NotNull
+  Role role) {
 
-    @NotNull
-    Role role) {
-
-    public Member toEntity(String password) {
-        return new Member(
-            this.email,
-            password,
-            this.userName,
-            this.nickName,
-            this.role
-        );
-    }
+  public Member toEntity(String password) {
+    return new Member(
+      this.email,
+      password,
+      this.userName,
+      this.nickName,
+      this.role
+    );
+  }
 }
