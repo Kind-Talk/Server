@@ -52,7 +52,7 @@ public class SchoolApiAdapter {
         JsonNode root = objectMapper.readTree(response);
         JsonNode rowNode = root.path("schoolInfo").path(1).path("row");
 
-        if (rowNode.isArray() && rowNode.size() > 1) {
+        if (rowNode.isArray() && !rowNode.isEmpty()) {
           for (JsonNode node : rowNode) {
             String code = node.path("SD_SCHUL_CODE").asText();
             String name = node.path("SCHUL_NM").asText();
