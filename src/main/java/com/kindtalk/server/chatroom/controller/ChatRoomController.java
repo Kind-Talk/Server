@@ -47,7 +47,7 @@ public class ChatRoomController {
   }
 
   @GetMapping("/{roomId}/messages")
-  public List<MessageResponse> getHistory(@PathVariable Long roomId) {
-    return messageService.getHistory(roomId);
+  public ResponseEntity<List<MessageResponse>> getHistory(@PathVariable Long roomId) {
+    return ResponseEntity.ok(messageService.getHistory(roomId));
   }
 }
