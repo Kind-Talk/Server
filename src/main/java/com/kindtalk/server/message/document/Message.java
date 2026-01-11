@@ -3,6 +3,7 @@ package com.kindtalk.server.message.document;
 import java.time.Instant;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -12,6 +13,7 @@ public class Message {
   @Id
   private String id;
 
+  @Indexed
   private Long roomId;
   private Long senderId;
   private String content;
