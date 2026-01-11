@@ -7,6 +7,7 @@ import com.kindtalk.server.school.dto.SchoolApiRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -72,7 +73,7 @@ public class SchoolApiAdapter {
           }
           hasMoreData = false;
         }
-      } catch (IOException e) {
+      } catch (RestClientException | IOException e) {
         throw new BadGatewayException("API Error: " + e.getMessage());
       }
     }
