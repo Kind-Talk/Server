@@ -1,5 +1,13 @@
 package com.kindtalk.server.message.dto;
 
-public record MessageRequest(Long senderId, String content) {
-  
+import jakarta.validation.constraints.NotBlank;
+
+public record MessageRequest(
+  @NotBlank
+  Long senderId,
+
+  @NotBlank
+  String content
+) {
+
 }

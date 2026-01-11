@@ -6,6 +6,7 @@ import com.kindtalk.server.message.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
@@ -19,7 +20,7 @@ public class MessageController {
   @SendTo("/sub/chat.{roomId}")
   public MessageResponse send(
     @DestinationVariable Long roomId,
-    MessageRequest request
+    @Payload MessageRequest request
   ) {
     return messageService.saveAndSend(roomId, request);
   }
