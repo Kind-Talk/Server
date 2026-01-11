@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,8 +28,14 @@ public class SecurityFilterConfig {
     http
       .csrf(AbstractHttpConfigurer::disable)
 
+      .headers(headers -> headers
+        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+      )
       .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/h2-console/**").permitAll()
+        .requestMatchers("/api/school", "/api/school/update").permitAll()
         .requestMatchers("/api/member/join", "/api/member/login").permitAll()
+        .requestMatchers("/error").permitAll()
         .requestMatchers("/api/member/me").authenticated()
         .anyRequest().authenticated()
       )
