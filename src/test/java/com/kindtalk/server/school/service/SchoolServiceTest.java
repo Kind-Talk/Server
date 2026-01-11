@@ -28,7 +28,7 @@ public class SchoolServiceTest {
   void 초등학교_동기화() {
     SchoolUpdateResponse response = schoolService.update();
 
-    assertThat(response.message().equals("학교 동기화 완료"));
+    assertThat(response.message().equals("학교 동기화 완료")).isTrue();
   }
 
   @Test
