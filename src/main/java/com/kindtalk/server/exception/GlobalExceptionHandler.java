@@ -2,9 +2,12 @@ package com.kindtalk.server.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -37,11 +40,11 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(value = MethodArgumentNotValidException.class)
-  public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+  public ResponseEntity<ValidationResponse> handleMethodArgumentNotValidException(
     MethodArgumentNotValidException e) {
-    String message = e.getAllErrors().get(0).getDefaultMessage();
+    List<String> errors = e.getAllErrors().stream().map(ObjectError::getDefaultMessage).toList();
     return new ResponseEntity<>(
-      new ErrorResponse(HttpStatus.BAD_REQUEST, message),
+      new ValidationResponse(HttpStatus.BAD_REQUEST, errors),
       HttpStatus.BAD_REQUEST
     );
   }
