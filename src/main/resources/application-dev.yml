@@ -2,7 +2,20 @@ spring:
   data:
     mongodb:
       uri: mongodb://root:1234@localhost:27017/chat?authSource=admin
+      
+  datasource:
+    url: jdbc:mysql://localhost:3306/kindtalk
+    username: root
+    password: 1234
 
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        
 debug: true
 
 logging:
@@ -10,3 +23,8 @@ logging:
     org.springframework.web.socket: DEBUG
     org.springframework.messaging: DEBUG
     org.springframework.stomp: DEBUG
+
+school:
+  api:
+    url: "https://open.neis.go.kr/hub/schoolInfo"
+    key: ${API_KEY}
