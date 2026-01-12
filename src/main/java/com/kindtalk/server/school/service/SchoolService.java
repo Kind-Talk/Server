@@ -22,14 +22,14 @@ public class SchoolService {
   private final SchoolApiAdapter schoolApiAdapter;
   private final SchoolRepository schoolRepository;
 
-  public SchoolUpdateResponse update() {
+  @Transactional
+  public SchoolUpdateResponse sync() {
     List<SchoolApiRequest> list = schoolApiAdapter.fetchSchools();
     int count = newSchool(list);
     return new SchoolUpdateResponse(list.size(), count, "학교 동기화 완료");
   }
 
-  @Transactional
-  public int newSchool(List<SchoolApiRequest> schoolList) {
+  private int newSchool(List<SchoolApiRequest> schoolList) {
     Set<String> codes = schoolRepository.findAll().stream()
       .map(School::getCode)
       .collect(Collectors.toSet());
