@@ -15,7 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@ActiveProfiles("h2")
+@ActiveProfiles("test")
 public class SchoolServiceTest {
 
   @Autowired
@@ -26,7 +26,7 @@ public class SchoolServiceTest {
 
   @Test
   void 초등학교_동기화() {
-    SchoolUpdateResponse response = schoolService.update();
+    SchoolUpdateResponse response = schoolService.sync();
 
     assertThat(response.message().equals("학교 동기화 완료")).isTrue();
   }
