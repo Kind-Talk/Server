@@ -33,7 +33,7 @@ public class SecurityFilterConfig {
       )
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/h2-console/**").permitAll()
-        .requestMatchers("/api/school", "/api/school/update").permitAll()
+        .requestMatchers("/api/school", "/api/school/sync").permitAll()
         .requestMatchers("/api/member/join", "/api/member/login").permitAll()
         .requestMatchers("/error").permitAll()
         .requestMatchers("/api/member/me").authenticated()
