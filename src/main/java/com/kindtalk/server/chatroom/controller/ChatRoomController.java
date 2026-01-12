@@ -4,7 +4,10 @@ import com.kindtalk.server.chatroom.dto.ChatRoomCreateRequest;
 import com.kindtalk.server.chatroom.dto.ChatRoomResponse;
 import com.kindtalk.server.chatroom.dto.UpdateAnnounceRequest;
 import com.kindtalk.server.chatroom.service.ChatRoomService;
+import com.kindtalk.server.message.dto.MessageResponse;
+import com.kindtalk.server.message.service.MessageService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatRoomController {
 
   private final ChatRoomService chatRoomService;
+  private final MessageService messageService;
 
   @PostMapping
   public ResponseEntity<ChatRoomResponse> create(
@@ -40,5 +44,10 @@ public class ChatRoomController {
     @PathVariable Long id,
     @RequestBody UpdateAnnounceRequest request) {
     return ResponseEntity.ok(chatRoomService.updateAnnounce(id, request));
+  }
+
+  @GetMapping("/{roomId}/messages")
+  public ResponseEntity<List<MessageResponse>> getHistory(@PathVariable Long roomId) {
+    return ResponseEntity.ok(messageService.getHistory(roomId));
   }
 }
