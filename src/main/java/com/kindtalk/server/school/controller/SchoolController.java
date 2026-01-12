@@ -21,9 +21,9 @@ public class SchoolController {
 
   private final SchoolService schoolService;
 
-  @PostMapping("/update")
-  public ResponseEntity<SchoolUpdateResponse> update() {
-    return ResponseEntity.ok(schoolService.update());
+  @PostMapping("/sync")
+  public ResponseEntity<SchoolUpdateResponse> sync() {
+    return ResponseEntity.ok(schoolService.sync());
   }
 
   @GetMapping
