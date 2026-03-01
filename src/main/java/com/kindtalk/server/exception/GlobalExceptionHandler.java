@@ -39,6 +39,15 @@ public class GlobalExceptionHandler {
     );
   }
 
+  @ExceptionHandler(value = BadRequestException.class)
+  public ResponseEntity<ErrorResponse> handleBadRequestException(
+    BadRequestException e) {
+    return new ResponseEntity<>(
+      new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage()),
+      HttpStatus.BAD_REQUEST
+    );
+  }
+
   @ExceptionHandler(value = MethodArgumentNotValidException.class)
   public ResponseEntity<ValidationResponse> handleMethodArgumentNotValidException(
     MethodArgumentNotValidException e) {
