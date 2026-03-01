@@ -18,13 +18,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -39,24 +39,13 @@ public class MemberServiceTest {
   @Autowired
   SchoolRepository schoolRepository;
 
-  @Autowired
-  PasswordEncoder passwordEncoder;
-
-  private MemberJoinRequest member;
+  private Member member;
   private School school;
 
   @BeforeEach
   void setUp() {
     school = schoolRepository.save(new School("12345", "테스트 초등학교"));
-
-    member = new MemberJoinRequest(
-      "m1@email.com",
-      "11",
-      "박땡땡",
-      "박맘",
-      school.getCode(),
-      Role.TEACHER
-    );
+    member = memberRepository.save(new Member("m1@email.com", "1234", "회원1", "별명1", school, Role.TEACHER)); // default teacher
   }
 
   @AfterEach
@@ -66,28 +55,27 @@ public class MemberServiceTest {
 
   @Test
   void 회원가입_테스트() {
-    MemberResponse memberResponse = memberService.memberJoin(member);
+    // given
+    MemberJoinRequest request = new MemberJoinRequest("m2@email.com", "1234", "회원2", "별명2", "12345", Role.TEACHER);
 
-    assertThat(memberResponse.email()).isEqualTo("m1@email.com");
-    assertThat(memberResponse.userName()).isEqualTo("박땡땡");
-    assertThat(memberResponse.nickName()).isEqualTo("박맘");
-    assertThat(memberResponse.role()).isEqualTo(Role.TEACHER);
-  }
+    // when
+    MemberResponse memberResponse = memberService.memberJoin(request);
 
-  @Test
-  void 중복회원_테스트() {
-    memberRepository.save(new Member("m1@email.com", "11", "박땡땡", "박맘", school, Role.TEACHER));
-
-    DataAlreadyExistsException exception = assertThrows(DataAlreadyExistsException.class, () -> {
-      memberService.memberJoin(member);
-    });
-    assertThat(exception.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
+    // then
+    assertAll(
+      () -> assertThat(memberResponse.email()).isEqualTo("m2@email.com"),
+      () -> assertThat(memberResponse.userName()).isEqualTo("회원2"),
+      () -> assertThat(memberResponse.nickName()).isEqualTo("별명2"),
+      () -> assertThat(memberResponse.schoolCode()).isEqualTo("12345"),
+      () -> assertThat(memberResponse.schoolName()).isEqualTo("테스트 초등학교"),
+      () -> assertThat(memberResponse.role()).isEqualTo(Role.TEACHER)
+    );
   }
 
   @Test
   void 선생님_학교_누락_시_회원가입_실패() {
     // given
-    MemberJoinRequest request = new MemberJoinRequest("m1@email.com", "11", "회원1", "별명1", null, Role.TEACHER);
+    MemberJoinRequest request = new MemberJoinRequest("m2@email.com", "1234", "회원2", "별명2", null, Role.TEACHER);
 
     // when & then
     BadRequestException exception = assertThrows(BadRequestException.class, () -> {
@@ -97,46 +85,66 @@ public class MemberServiceTest {
   }
 
   @Test
+  void 중복회원_테스트() {
+    // given
+    MemberJoinRequest request = new MemberJoinRequest("m1@email.com", "1234", "회원1", "별명1", "12345", Role.TEACHER);
+
+    // when & then
+    DataAlreadyExistsException exception = assertThrows(DataAlreadyExistsException.class, () -> {
+      memberService.memberJoin(request);
+    });
+    assertThat(exception.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
+  }
+
+  @Test
   void 회원조회_테스트() {
-    String password = passwordEncoder.encode(member.password());
-    Member memberData = memberRepository.save(member.toEntity(password, school));
+    // given
+    MyUserDetails auth = new MyUserDetails(member);
 
-    MyUserDetails userDetails = new MyUserDetails(memberData);
+    // when
+    MemberResponse response = memberService.memberDetail(auth);
 
-    MemberResponse memberResponse = memberService.memberDetail(userDetails);
-
-    assertThat(memberResponse.email()).isEqualTo("m1@email.com");
-    assertThat(memberResponse.userName()).isEqualTo("박땡땡");
-    assertThat(memberResponse.nickName()).isEqualTo("박맘");
-    assertThat(memberResponse.role()).isEqualTo(Role.TEACHER);
+    // then
+    assertAll(
+      () -> assertThat(response.email()).isEqualTo("m1@email.com"),
+      () -> assertThat(response.userName()).isEqualTo("회원1"),
+      () -> assertThat(response.nickName()).isEqualTo("별명1"),
+      () -> assertThat(response.schoolCode()).isEqualTo("12345"),
+      () -> assertThat(response.schoolName()).isEqualTo("테스트 초등학교"),
+      () -> assertThat(response.role()).isEqualTo(Role.TEACHER)
+    );
   }
 
   @Test
   void 회원수정_테스트() {
-    String password = passwordEncoder.encode(member.password());
-    Member memberData = memberRepository.save(member.toEntity(password, school));
+    // given
+    MyUserDetails auth = new MyUserDetails(member);
+    MemberUpdateRequest request = new MemberUpdateRequest("개명함", "별명변경");
 
-    MyUserDetails userDetails = new MyUserDetails(memberData);
+    // when
+    MemberResponse response = memberService.memberUpdate(auth, request);
 
-    MemberUpdateRequest updateRequest = new MemberUpdateRequest("박둘", "박파더");
-    MemberResponse memberResponse = memberService.memberUpdate(userDetails, updateRequest);
-
-    assertThat(memberResponse.email()).isEqualTo("m1@email.com");
-    assertThat(memberResponse.userName()).isEqualTo("박둘");
-    assertThat(memberResponse.nickName()).isEqualTo("박파더");
-    assertThat(memberResponse.role()).isEqualTo(Role.TEACHER);
+    // then
+    assertAll(
+      () -> assertThat(response.email()).isEqualTo("m1@email.com"),
+      () -> assertThat(response.userName()).isEqualTo("개명함"),
+      () -> assertThat(response.nickName()).isEqualTo("별명변경"),
+      () -> assertThat(response.schoolCode()).isEqualTo("12345"),
+      () -> assertThat(response.schoolName()).isEqualTo("테스트 초등학교"),
+      () -> assertThat(response.role()).isEqualTo(Role.TEACHER)
+    );
   }
 
   @Test
   void 없는_회원_조회하기_테스트() {
-    String password = passwordEncoder.encode(member.password());
-    Member memberEntity = member.toEntity(password, school); // ???
+    // given
+    Member mock = mock(Member.class);
+    when(mock.getId()).thenReturn(100L);
+    MyUserDetails auth = new MyUserDetails(mock);
 
-    ReflectionTestUtils.setField(memberEntity, "id", 100L);
-    MyUserDetails userDetails = new MyUserDetails(memberEntity);
-
+    // when & then
     DataNotFoundException exception = assertThrows(DataNotFoundException.class, () -> {
-      memberService.memberDetail(userDetails);
+      memberService.memberDetail(auth);
     });
     assertThat(exception.getMessage()).isEqualTo("해당 회원이 존재하지 않습니다.");
   }
@@ -145,7 +153,6 @@ public class MemberServiceTest {
   void 선생님_학교_수정_테스트() {
     // given
     schoolRepository.save(new School("22222", "테스트2 초등학교"));
-    Member member = memberRepository.save(new Member("m1@email.com", "1234", "회원1", "별명1", school, Role.TEACHER));
 
     TeacherSchoolUpdateRequest request = new TeacherSchoolUpdateRequest("22222");
     MyUserDetails auth = new MyUserDetails(member);
