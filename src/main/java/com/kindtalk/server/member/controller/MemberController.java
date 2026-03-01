@@ -4,6 +4,7 @@ package com.kindtalk.server.member.controller;
 import com.kindtalk.server.member.dto.MemberJoinRequest;
 import com.kindtalk.server.member.dto.MemberResponse;
 import com.kindtalk.server.member.dto.MemberUpdateRequest;
+import com.kindtalk.server.member.dto.TeacherSchoolUpdateRequest;
 import com.kindtalk.server.member.service.MemberService;
 import com.kindtalk.server.security.principal.MyUserDetails;
 import jakarta.validation.Valid;
@@ -39,5 +40,12 @@ public class MemberController {
     @AuthenticationPrincipal MyUserDetails member,
     @Valid @RequestBody MemberUpdateRequest updateRequest) {
     return ResponseEntity.ok(memberService.memberUpdate(member, updateRequest));
+  }
+
+  @PatchMapping("/me/school")
+  public ResponseEntity<MemberResponse> updateSchool(
+    @AuthenticationPrincipal MyUserDetails auth,
+    @Valid @RequestBody TeacherSchoolUpdateRequest request) {
+    return ResponseEntity.ok(memberService.updateSchool(auth, request));
   }
 }
