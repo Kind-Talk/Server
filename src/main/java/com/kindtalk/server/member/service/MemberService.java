@@ -69,6 +69,9 @@ public class MemberService {
   @Transactional
   public MemberResponse updateSchool(MyUserDetails auth, TeacherSchoolUpdateRequest request) {
     Member member = findById(auth.getMemberId());
+
+    if (member.getRole() != Role.TEACHER) throw new BadRequestException("선생님만 학교 정보를 수정할 수 있습니다.");
+    
     School school = findSchool(request.schoolCode());
     member.updateSchool(school);
     return MemberResponse.of(member);
