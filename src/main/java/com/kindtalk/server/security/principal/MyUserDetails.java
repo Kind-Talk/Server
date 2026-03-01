@@ -23,6 +23,10 @@ public class MyUserDetails implements UserDetails {
     return member;
   }
 
+  public Long getMemberId() {
+    return member.getId();
+  }
+
   @Override
   public String getUsername() {
     return member.getEmail();
