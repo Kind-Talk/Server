@@ -13,11 +13,11 @@ public record MemberResponse(
   Role role) {
 
   public static MemberResponse of(Member member) {
-    boolean isTeacher = member.getRole() == Role.TEACHER;
     School school = member.getSchool();
+    boolean isTeacherWithSchool = member.getRole() == Role.TEACHER && school != null;
 
-    String schoolCode = (isTeacher && school != null) ? school.getCode() : null;
-    String schoolName = (isTeacher && school != null) ? school.getName() : null;
+    String schoolCode = isTeacherWithSchool ? school.getCode() : null;
+    String schoolName = isTeacherWithSchool ? school.getName() : null;
 
     return new MemberResponse(
       member.getEmail(),
