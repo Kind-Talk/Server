@@ -1,6 +1,6 @@
 package com.kindtalk.server.member.service;
 
-import com.kindtalk.server.exception.BadRequestException;
+import com.kindtalk.server.exception.BusinessRuleException;
 import com.kindtalk.server.exception.DataAlreadyExistsException;
 import com.kindtalk.server.exception.DataNotFoundException;
 import com.kindtalk.server.member.domain.Member;
@@ -78,7 +78,7 @@ public class MemberServiceTest {
     MemberJoinRequest request = new MemberJoinRequest("m2@email.com", "1234", "회원2", "별명2", null, Role.TEACHER);
 
     // when & then
-    BadRequestException exception = assertThrows(BadRequestException.class, () -> {
+    BusinessRuleException exception = assertThrows(BusinessRuleException.class, () -> {
       memberService.memberJoin(request);
     });
     assertThat(exception.getMessage()).isEqualTo("선생님 권한에서 학교는 필수입니다.");

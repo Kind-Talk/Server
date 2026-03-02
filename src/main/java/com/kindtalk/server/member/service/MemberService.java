@@ -1,6 +1,6 @@
 package com.kindtalk.server.member.service;
 
-import com.kindtalk.server.exception.BadRequestException;
+import com.kindtalk.server.exception.BusinessRuleException;
 import com.kindtalk.server.exception.DataAlreadyExistsException;
 import com.kindtalk.server.exception.DataNotFoundException;
 import com.kindtalk.server.member.domain.Member;
@@ -35,8 +35,8 @@ public class MemberService {
     School school = null;
     if (join.role() == Role.TEACHER) {
       if (join.schoolCode() == null || join.schoolCode().isBlank())
-        throw new BadRequestException("선생님 권한에서 학교는 필수입니다.");
-      
+        throw new BusinessRuleException("선생님 권한에서 학교는 필수입니다.");
+
       school = findSchool(join.schoolCode());
     }
 
@@ -72,7 +72,7 @@ public class MemberService {
   public MemberResponse updateSchool(MyUserDetails auth, TeacherSchoolUpdateRequest request) {
     Member member = findById(auth.getMemberId());
 
-    if (member.getRole() != Role.TEACHER) throw new BadRequestException("선생님만 학교 정보를 수정할 수 있습니다.");
+    if (member.getRole() != Role.TEACHER) throw new BusinessRuleException("선생님만 학교 정보를 수정할 수 있습니다.");
 
     School school = findSchool(request.schoolCode());
     member.updateSchool(school);
