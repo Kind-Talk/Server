@@ -39,6 +39,15 @@ public class GlobalExceptionHandler {
     );
   }
 
+  @ExceptionHandler(value = BusinessRuleException.class)
+  public ResponseEntity<ErrorResponse> handleBadRequestException(
+    BusinessRuleException e) {
+    return new ResponseEntity<>(
+      new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage()),
+      HttpStatus.BAD_REQUEST
+    );
+  }
+
   @ExceptionHandler(value = MethodArgumentNotValidException.class)
   public ResponseEntity<ValidationResponse> handleMethodArgumentNotValidException(
     MethodArgumentNotValidException e) {
