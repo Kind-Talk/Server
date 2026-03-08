@@ -52,8 +52,7 @@ public class ChildService {
 
   @Transactional(readOnly = true)
   public List<ChildResponse> findAll(MyUserDetails auth) {
-    Member member = findMember(auth.getMemberId());
-    List<Child> children = childRepository.findAllByMemberId(member.getId());
+    List<Child> children = childRepository.findAllByMemberId(auth.getMemberId());
     return children.stream().map(ChildResponse::of).toList();
   }
 
