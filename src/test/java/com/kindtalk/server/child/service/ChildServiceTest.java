@@ -35,7 +35,7 @@ public class ChildServiceTest {
   ChildService childService;
 
   @Autowired
-  ChildRepository childrepository;
+  ChildRepository childRepository;
 
   @Autowired
   MemberRepository memberRepository;
@@ -56,7 +56,7 @@ public class ChildServiceTest {
 
   @AfterEach
   void delete() {
-    childrepository.deleteAll();
+    childRepository.deleteAll();
     memberRepository.deleteAll();
     schoolRepository.deleteAll();
   }
@@ -96,8 +96,8 @@ public class ChildServiceTest {
     // given
     School school1 = schoolRepository.save(new School("22222", "테스트2 초등학교"));
 
-    Child child1 = childrepository.save(new Child("자녀3", member, school));
-    Child child2 = childrepository.save(new Child("자녀4", member, school1)); // 다른 학교 등록
+    Child child1 = childRepository.save(new Child("자녀3", member, school));
+    Child child2 = childRepository.save(new Child("자녀4", member, school1)); // 다른 학교 등록
 
     // when
     List<ChildResponse> children = childService.findAll(auth);
@@ -120,7 +120,7 @@ public class ChildServiceTest {
   @Test
   void 자녀_상세_조회_테스트() {
     // given
-    Child child = childrepository.save(new Child("자녀5", member, school));
+    Child child = childRepository.save(new Child("자녀5", member, school));
 
     // when
     ChildResponse response1 = childService.detail(child.getId(), auth);
@@ -147,7 +147,7 @@ public class ChildServiceTest {
   void 자녀_정보_수정_테스트() {
     // given
     schoolRepository.save(new School("33333", "테스트3 초등학교"));
-    Child child = childrepository.save(new Child("자녀6", member, school));
+    Child child = childRepository.save(new Child("자녀6", member, school));
 
     ChildUpdateRequest request = new ChildUpdateRequest("개명함", "33333");
 
@@ -166,7 +166,7 @@ public class ChildServiceTest {
   @Test
   void 자녀_삭제_테스트() {
     // given
-    Child child = childrepository.save(new Child("자녀6", member, school));
+    Child child = childRepository.save(new Child("자녀6", member, school));
 
     // when
     childService.delete(child.getId(), auth);
