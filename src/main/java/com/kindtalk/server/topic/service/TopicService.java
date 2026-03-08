@@ -23,7 +23,7 @@ public class TopicService {
   public List<TopicResponse> getTopics(Long chatRoomId) {
     ChatRoom chatRoom = getChatRoom(chatRoomId);
 
-    return topicRepository.findByChatRoom(chatRoom).stream()
+    return topicRepository.findAllByChatRoom(chatRoom).stream()
       .map(TopicResponse::of)
       .toList();
   }
