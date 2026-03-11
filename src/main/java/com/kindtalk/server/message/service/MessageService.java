@@ -28,4 +28,10 @@ public class MessageService {
       .map(MessageResponse::of)
       .toList();
   }
+
+  public List<MessageResponse> getHistoryOfTopic(Long topicId) {
+    return messageRepository.findAllByTopicIdOrderBySendAtDesc(topicId).stream()
+      .map(MessageResponse::of)
+      .toList();
+  }
 }

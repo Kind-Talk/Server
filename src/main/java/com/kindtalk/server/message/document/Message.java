@@ -18,11 +18,22 @@ public class Message {
   private Long senderId;
   private String content;
   private Instant sendAt;
+  private Long topicId;
+  private Long parentId;
 
   public Message(Long roomId, Long senderId, String content, Instant sendAt) {
     this.roomId = roomId;
     this.senderId = senderId;
     this.content = content;
     this.sendAt = sendAt;
+  }
+
+  public Message(Long roomId, Long senderId, String content, Instant sendAt, Long parentId) {
+    this(roomId, senderId, content, sendAt);
+    this.parentId = parentId;
+  }
+
+  public void setTopicId(Long topicId) {
+    this.topicId = topicId;
   }
 }
