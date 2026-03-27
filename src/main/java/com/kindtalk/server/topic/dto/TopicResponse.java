@@ -10,7 +10,7 @@ public record TopicResponse(
 
   LocalDateTime archivedAt,
 
-  Long chatRoomId
+  Long chatroomId
 ) {
 
   public static TopicResponse of(Topic topic) {
