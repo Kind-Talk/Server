@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "chat_message")
 @CompoundIndexes({
   @CompoundIndex(name = "idx_room_sendat_desc", def = "{'roomId': 1, 'sendAt': -1}"),
-  @CompoundIndex(name = "idx_topic_sendat_asc", def = "{'topicId': 1, 'sendAt': 1, sparse = true")
+  @CompoundIndex(name = "idx_topic_sendat_asc", def = "{'topicId': 1, 'sendAt': 1, sparse = true}")
 })
 public class Message {
 
