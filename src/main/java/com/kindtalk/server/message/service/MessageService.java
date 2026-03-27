@@ -28,6 +28,10 @@ public class MessageService {
   public Slice<MessageResponse> getHistory(Long roomId, Instant cursor, int size) {
     Pageable pageable = PageRequest.of(0, size);
 
+    if (cursor == null) {
+      cursor = Instant.now();
+    }
+
     return messageRepository.findByRoomIdAndSendAtLessThanOrderBySendAtDesc(
         roomId,
         cursor,
@@ -37,6 +41,10 @@ public class MessageService {
 
   public Slice<MessageResponse> getHistoryOfTopic(Long topicId, Instant cursor, int size) {
     Pageable pageable = PageRequest.of(0, size);
+
+    if (cursor == null) {
+      cursor = Instant.now();
+    }
 
     return messageRepository.findByTopicIdAndSendAtLessThanOrderBySendAtAsc(
         topicId,
