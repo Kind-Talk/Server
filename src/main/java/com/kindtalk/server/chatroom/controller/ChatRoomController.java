@@ -7,8 +7,9 @@ import com.kindtalk.server.chatroom.service.ChatRoomService;
 import com.kindtalk.server.message.dto.MessageResponse;
 import com.kindtalk.server.message.service.MessageService;
 import jakarta.validation.Valid;
-import java.util.List;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,10 +49,10 @@ public class ChatRoomController {
   }
 
   @GetMapping("/{roomId}/messages")
-  public ResponseEntity<List<MessageResponse>> getHistory(
+  public ResponseEntity<Slice<MessageResponse>> getHistory(
     @PathVariable Long roomId,
-    @RequestParam(defaultValue = "0") int page,
+    @RequestParam(required = false) Instant cursor,
     @RequestParam(defaultValue = "10") int size) {
-    return ResponseEntity.ok(messageService.getHistory(roomId, page, size));
+    return ResponseEntity.ok(messageService.getHistory(roomId, cursor, size));
   }
 }

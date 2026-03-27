@@ -5,8 +5,10 @@ import com.kindtalk.server.message.dto.MessageRequest;
 import com.kindtalk.server.message.dto.MessageResponse;
 import com.kindtalk.server.message.repository.MessageRepository;
 import java.time.Instant;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,15 +25,23 @@ public class MessageService {
     return MessageResponse.of(message);
   }
 
-  public List<MessageResponse> getHistory(Long roomId) {
-    return messageRepository.findAllByRoomIdOrderBySendAtAsc(roomId).stream()
-      .map(MessageResponse::of)
-      .toList();
+  public Slice<MessageResponse> getHistory(Long roomId, Instant cursor, int size) {
+    Pageable pageable = PageRequest.of(0, size);
+
+    return messageRepository.findByRoomIdAndSendAtLessThanOrderBySendAtDesc(
+        roomId,
+        cursor,
+        pageable)
+      .map(MessageResponse::of);
   }
 
-  public List<MessageResponse> getHistoryOfTopic(Long topicId) {
-    return messageRepository.findAllByTopicIdOrderBySendAtDesc(topicId).stream()
-      .map(MessageResponse::of)
-      .toList();
+  public Slice<MessageResponse> getHistoryOfTopic(Long topicId, Instant cursor, int size) {
+    Pageable pageable = PageRequest.of(0, size);
+
+    return messageRepository.findByTopicIdAndSendAtLessThanOrderBySendAtAsc(
+        topicId,
+        cursor,
+        pageable)
+      .map(MessageResponse::of);
   }
 }
