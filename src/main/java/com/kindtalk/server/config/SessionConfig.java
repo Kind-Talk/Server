@@ -1,0 +1,59 @@
+package com.kindtalk.server.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.session.MapSession;
+import org.springframework.session.config.SessionRepositoryCustomizer;
+import org.springframework.session.data.redis.RedisSessionMapper;
+import org.springframework.session.data.redis.RedisSessionRepository;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.session.web.http.CookieSerializer;
+import org.springframework.session.web.http.DefaultCookieSerializer;
+
+import java.util.Map;
+import java.util.function.BiFunction;
+
+@Configuration
+@EnableRedisHttpSession(redisNamespace = "kindtalk:session")
+public class SessionConfig {
+
+  @Bean
+  SessionRepositoryCustomizer<RedisSessionRepository> repositorySessionRepositoryCustomizer() {
+    return (redisSessionRepository) -> redisSessionRepository
+      .setRedisSessionMapper(new SafeRedisSessionMapper(redisSessionRepository));
+  }
+
+  static class SafeRedisSessionMapper implements BiFunction<String, Map<String, Object>, MapSession> {
+
+    private final RedisSessionMapper delegate = new RedisSessionMapper();
+    private final RedisSessionRepository sessionRepository;
+
+    SafeRedisSessionMapper(RedisSessionRepository sessionRepository) {
+      this.sessionRepository = sessionRepository;
+    }
+
+    @Override
+    public MapSession apply(String sessionId, Map<String, Object> map) {
+      try {
+        return this.delegate.apply(sessionId, map);
+      } catch (IllegalStateException ex) {
+        this.sessionRepository.deleteById(sessionId);
+        return null;
+      }
+    }
+  }
+
+  @Bean
+  public CookieSerializer cookieSerializer() {
+    DefaultCookieSerializer serializer = new DefaultCookieSerializer();
+
+    serializer.setCookieName("KIND_SESSION");
+
+    serializer.setUseHttpOnlyCookie(true);
+    serializer.setUseSecureCookie(false);
+    serializer.setCookiePath("/");
+    serializer.setCookieMaxAge(604800);
+
+    return serializer;
+  }
+}
