@@ -14,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyUserDetails implements UserDetails, Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   private Long memberId;
   private String email;
   private String password;
