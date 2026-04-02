@@ -53,7 +53,7 @@ public class SessionConfig {
     serializer.setCookieName("KIND_SESSION");
 
     serializer.setUseHttpOnlyCookie(true);
-    serializer.setUseSecureCookie(false);
+    serializer.setUseSecureCookie(true);
     serializer.setCookiePath("/");
     serializer.setCookieMaxAge(604800);
 
