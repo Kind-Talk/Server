@@ -3,6 +3,7 @@ package com.kindtalk.server.security.principal;
 import com.kindtalk.server.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MyUserDetails implements UserDetails, Serializable {
+public class MyUserDetails implements UserDetails, Serializable, CredentialsContainer {
 
   private static final long serialVersionUID = 1L;
 
@@ -26,6 +27,11 @@ public class MyUserDetails implements UserDetails, Serializable {
     this.email = member.getEmail();
     this.password = member.getPassword();
     this.role = member.getRole().name();
+  }
+
+  @Override
+  public void eraseCredentials() {
+    this.password = null;
   }
 
   @Override
