@@ -52,13 +52,13 @@ public class MemberService {
 
   @Transactional(readOnly = true)
   public MemberResponse memberDetail(MyUserDetails auth) {
-    Member member = findById(auth.getMember().getId());
+    Member member = findById(auth.getMemberId());
     return MemberResponse.of(member);
   }
 
   @Transactional
   public MemberResponse memberUpdate(MyUserDetails auth, MemberUpdateRequest update) {
-    Member member = findById(auth.getMember().getId());
+    Member member = findById(auth.getMemberId());
     member.updateInfo(update.userName(), update.nickName());
     return MemberResponse.of(member);
   }
