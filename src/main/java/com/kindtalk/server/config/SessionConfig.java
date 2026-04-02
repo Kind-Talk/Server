@@ -14,7 +14,10 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 @Configuration
-@EnableRedisHttpSession(redisNamespace = "kindtalk:session")
+@EnableRedisHttpSession(
+  redisNamespace = "kindtalk:session",
+  maxInactiveIntervalInSeconds = 604800
+)
 public class SessionConfig {
 
   @Bean
