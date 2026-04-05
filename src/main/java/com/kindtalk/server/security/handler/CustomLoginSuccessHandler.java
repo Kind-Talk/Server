@@ -1,7 +1,6 @@
 package com.kindtalk.server.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kindtalk.server.member.domain.Member;
 import com.kindtalk.server.security.dto.LoginResponse;
 import com.kindtalk.server.security.principal.MyUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,10 +26,9 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
     response.setContentType("application/json;charset=UTF-8");
     response.setStatus(HttpStatus.OK.value());
 
-    MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-    Member member = myUserDetails.getMember();
+    MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
 
-    LoginResponse data = new LoginResponse(member.getEmail(), member.getRole());
+    LoginResponse data = new LoginResponse(auth.getUsername(), auth.getRole());
     response.getWriter().write(objectMapper.writeValueAsString(data));
   }
 }
