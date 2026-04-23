@@ -1,40 +1,60 @@
 package com.kindtalk.server.security.principal;
 
 import com.kindtalk.server.member.domain.Member;
-import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-@RequiredArgsConstructor
-public class MyUserDetails implements UserDetails {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class MyUserDetails implements UserDetails, Serializable, CredentialsContainer {
 
-  private final Member member;
+  private static final long serialVersionUID = 1L;
+
+  private Long memberId;
+  private String email;
+  private String password;
+  private String role;
+
+  public MyUserDetails(Member member) {
+    this.memberId = member.getId();
+    this.email = member.getEmail();
+    this.password = member.getPassword();
+    this.role = member.getRole().name();
+  }
+
+  @Override
+  public void eraseCredentials() {
+    this.password = null;
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(new SimpleGrantedAuthority("ROLE_" + member.getRole()));
+    return List.of(new SimpleGrantedAuthority("ROLE_" + role));
   }
 
-  public Member getMember() {
-    return member;
+  public String getRole() {
+    return role;
   }
 
   public Long getMemberId() {
-    return member.getId();
+    return memberId;
   }
 
   @Override
   public String getUsername() {
-    return member.getEmail();
+    return email;
   }
 
   @Override
   public String getPassword() {
-    return member.getPassword();
+    return password;
   }
 
   @Override

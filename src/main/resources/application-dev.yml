@@ -1,4 +1,9 @@
 spring:
+  session:
+    store-type: redis
+    redis:
+      namespace: "kindtalk:session"
+
   data:
     mongodb:
       uri: mongodb://root:1234@localhost:27017/chat?authSource=admin
@@ -18,14 +23,16 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        highlight_sql: true
 
-debug: true
+debug: false
 
 logging:
   level:
     org.springframework.web.socket: DEBUG
     org.springframework.messaging: DEBUG
     org.springframework.stomp: DEBUG
+    org.hibernate.SQL: INFO
 
 school:
   api:

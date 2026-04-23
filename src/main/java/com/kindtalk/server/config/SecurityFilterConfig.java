@@ -1,5 +1,6 @@
 package com.kindtalk.server.config;
 
+import com.kindtalk.server.security.handler.CustomAuthenticationEntryPoint;
 import com.kindtalk.server.security.handler.CustomLoginFailureHandler;
 import com.kindtalk.server.security.handler.CustomLoginSuccessHandler;
 import com.kindtalk.server.security.handler.CustomLogoutSuccessHandler;
@@ -22,6 +23,7 @@ public class SecurityFilterConfig {
   private final CustomLoginSuccessHandler customLoginSuccessHandler;
   private final CustomLoginFailureHandler customLoginFailureHandler;
   private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+  private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -44,11 +46,14 @@ public class SecurityFilterConfig {
         .successHandler(customLoginSuccessHandler)
         .failureHandler(customLoginFailureHandler)
       )
+      .exceptionHandling(exception -> exception
+        .authenticationEntryPoint((authenticationEntryPoint))
+      )
       .logout(logout -> logout
         .logoutUrl("/api/member/logout")
         .logoutSuccessHandler(customLogoutSuccessHandler)
         .invalidateHttpSession(true)
-        .deleteCookies("JSESSIONID")
+        .deleteCookies("KIND_SESSION")
       );
 
     return http.build();
