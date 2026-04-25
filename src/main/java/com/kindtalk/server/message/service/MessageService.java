@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,13 +17,24 @@ import org.springframework.stereotype.Service;
 public class MessageService {
 
   private final MessageRepository messageRepository;
+  private final RedisTemplate<String, Object> redisTemplate;
+
+  private static final String CHAT_CACHE_PREFIX = "chat:cache:room:";
+  private static final String CHAT_ROOM_PREFIX = "chat:room:";
 
   public MessageResponse saveAndSend(Long roomId, MessageRequest request) {
     Message message = messageRepository.save(
       new Message(roomId, request.senderId(), request.content(), Instant.now())
     );
+    MessageResponse response = MessageResponse.of(message);
 
-    return MessageResponse.of(message);
+    String cacheKey = CHAT_CACHE_PREFIX + roomId;
+    redisTemplate.opsForList().leftPush(cacheKey, response);
+    redisTemplate.opsForList().trim(cacheKey, 0, 99);
+
+    redisTemplate.convertAndSend(CHAT_ROOM_PREFIX + roomId, response);
+
+    return response;
   }
 
   public Slice<MessageResponse> getHistory(Long roomId, Instant cursor, int size) {
